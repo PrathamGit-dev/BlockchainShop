@@ -86,6 +86,8 @@ const vmContractHandler = async () => {
 }
   // ConnectWalletHandler();
 
+  //check for git
+
 
 const ConnectWalletHandler = async() => {
   console.log("Connect wallet fired")
