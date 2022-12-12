@@ -16,6 +16,7 @@ import { ABI } from './components/abi';
 import Web3 from 'web3'
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ethers } from 'ethers';
 
 
 function App() {
@@ -40,6 +41,9 @@ function App() {
   const [total_items, setTotalItems] = useState(0)
   const [item_update, setItem_update] = useState([])
   const [first, setfirst] = useState(true)
+  const [provider, setProvider] = useState(null)
+  const [msg_main, setMsg_main] = useState("Connect your wallet")
+
   useEffect(() => {
     if (vmContract){
         // winnerHandler()
@@ -68,12 +72,15 @@ const vmContractHandler = async () => {
       try {
         const _web3 = await new Web3(window.ethereum);
         setWeb3(_web3)
+        // const _provider = new ethers.providers.Web3Provider(window.Ethereum);
+        // setProvider(_provider)
           console.log("Web3 set")
           const abi2 = ABI;
           // console.log("Type of abi2 is", typeof(abi2))
           // const vm = await new web3.eth.Contract(abi2, "0x20ae8f53a89b20e2897fe15cb3503b722f57706c");
           
-          const vm = await new web3.eth.Contract(abi2, "0x83E7916a736e73C7b00be1DdB06a4F8DD0f643dc");
+          const vm = await new web3.eth.Contract(abi2, "0x4243B09895c6EA5Fc46Aa2bA5CF024f91bB5E9d4");
+          // const vm = await new ethers.
           // const vm = await contract(web3);
           setVmContract(vm)
           // console.log("Vm Contract set")
@@ -93,20 +100,45 @@ const ConnectWalletHandler = async() => {
   console.log("Connect wallet fired")
   if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
       try {
-          const accounts = await web3.eth.getAccounts();
-          console.log("Accounts accessed")
-          const account = accounts[0];
-          setAddress(account)
-          console.log("Address is ", address)
-          setError('')
-          setSuccessMsg("WalletConnected")
+          // const accounts = await web3.eth.getAccounts();
+          // console.log("Accounts accessed")
+          // const account = accounts[0];
+          // setAddress(account)
+          // console.log("Address is ", address)
+          // setError('')
+          // setSuccessMsg("WalletConnected")
           // CustomerHandler()
+          // console.log("Before provider")
+          const provider = await new ethers.providers.Web3Provider(window.ethereum);
+          // console.log("Provider resolved")
+
+          await provider.send("eth_requestAccounts", []);
+
+          const signers = provider.getSigner();
+          const address = await signers.getAddress();
+          setAddress(address);
+          try{
+            const a= await vmContract.methods.customers(address).call();
+            // console.log(a[0])
+            if(a[0] == '') setMsg_main("Add yourself as customer")
+            else setMsg_main("Continue to shop")
+          }
+          catch(err){
+            console.log("Not a cusotme")
+          }
+          // console.log(address)
+          // const accounts = await provider.send({ method: 'eth_requestAccounts' });
+          // const account = accounts[0];
+          // setAddress(account)
+          // console.log("Address is ", address)
+
       }
       catch (err) {
           setError("Unable to connect wallet")
           console.log(err)
       }
 }
+
 // const ConnectWalletHandler = async() => {
   // console.log("Connect wallet fired")
   // if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
@@ -128,7 +160,12 @@ const ConnectWalletHandler = async() => {
 const ShopOwnerHandler = async() => {
   const shop_owner = await vmContract.methods.shopowner().call();
   setShopOwner(shop_owner);
-  
+ 
+}
+
+const AddCustomer = async() => {
+  const added_customer = await vmContract.methods.addCustomer().send({from: address});
+  console.log("Added customer")
 }
 
 const AddNewItemHandler = async(item_code_, item_price_, item_quantity_) => {
@@ -391,7 +428,7 @@ const createBill = async() => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {/* <Nav.Link href="/about">About</Nav.Link> */}
-
+        <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand>
 
             {/* <NavDropdown title="Update your shop" id="basic-nav-dropdown">
               {items.map(item => (  
@@ -404,10 +441,8 @@ const createBill = async() => {
 
 
             <NavDropdown title="Your Details" id="basic-nav-dropdown">
-              <NavDropdown.Item href="">{customer[0]}</NavDropdown.Item>
-              <NavDropdown.Item href="">
-                {customer[1]}
-              </NavDropdown.Item>
+              {/* <NavDropdown.Item href="">{customer[0]}</NavDropdown.Item> */}
+              {/* <NavDropdown.Item href="">{customer[1]}</NavDropdown.Item> */}
               <NavDropdown.Item href="#action/3.3">{address}</NavDropdown.Item>
               {/* <NavDropdown.Divider /> */}
               <NavDropdown.Item >
@@ -427,12 +462,17 @@ const createBill = async() => {
           <div className="col-lg-6 col-md-8 mx-auto">
             <h1 className="fw-light">Blockchain Shop</h1>
             <p className="lead text-muted">
-              Welcome to the futuristic shopping.
-              We are glad to have you back <b>{customer['name']}</b>!!!
+              
+              We are glad to have you back 
+              {/* <b>{customer['name']}</b> */}
+              !!!
+              
+             
               
             </p>
             <p className="lead text-muted">
-              ShopOwner is <b>{shopOwner}</b>!!!
+              {/* ShopOwner is <b>{shopOwner}</b>!!! */}
+              <b>{msg_main}</b>
               
             </p>
             <div>

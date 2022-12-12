@@ -7,18 +7,7 @@ export const ABI = [
     "type": "constructor"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "phone_",
-        "type": "string"
-      }
-    ],
+    "inputs": [],
     "name": "addCustomer",
     "outputs": [],
     "stateMutability": "payable",
