@@ -24,14 +24,8 @@ function App() {
   const [error, setError]  = useState('')
   const [vmContract, setVmContract] = useState(null)
   const [web3, setWeb3] = useState(null)
-  const [winner, setWinner] = useState(null)
   const [address, setAddress] = useState(null)
   const [successMsg, setSuccessMsg] = useState('')
-  const [proposals_length, setproposals_length] = useState('')
-  const [proposals, setProposals] = useState([])
-  const [addressDetails, setAddressDetails] = useState('')
-  const [voted, setVoted] = useState(1)
-  const [weight, setWeight] = useState(0)
   const [shopOwner, setShopOwner] = useState(null)
   const [items, setItems] = useState([])
   const [customer, setCustomer] = useState([])
@@ -40,9 +34,8 @@ function App() {
   const [cart_amount, setCartAmount] = useState(0)
   const [total_items, setTotalItems] = useState(0)
   const [item_update, setItem_update] = useState([])
-  const [first, setfirst] = useState(true)
-  const [provider, setProvider] = useState(null)
   const [msg_main, setMsg_main] = useState("Connect your wallet")
+  const [connect_wallet_msg, set_connect_wallet_msg] = useState("Connect")
 
   useEffect(() => {
     if (vmContract){
@@ -120,8 +113,13 @@ const ConnectWalletHandler = async() => {
           try{
             const a= await vmContract.methods.customers(address).call();
             // console.log(a[0])
-            if(a[0] == '') setMsg_main("Add yourself as customer")
-            else setMsg_main("Continue to shop")
+            if(a[0] == '') {
+              setMsg_main("Add yourself as customer")
+            }
+            else{
+              setMsg_main("Continue to shop")
+              set_connect_wallet_msg("..." + address.slice(-5,-1))
+            }
           }
           catch(err){
             console.log("Not a cusotme")
@@ -248,6 +246,8 @@ const EtherCartHandler = async() => {
 
 }
 
+
+
 const CartAmountHandler = () => {
   // console.log("Entered cart amount handler")
   // console.log("Local cart has")
@@ -272,7 +272,6 @@ const CartAmountHandler = () => {
   if(cart_ether.length != 0 && cart_local.length == 0 && total_cart_val != 0)
   // LocalCartHandler()
   setCartLocal(cart_ether)
-  setfirst(false)
 }
 
 const LocalCartHandler = () => {
@@ -422,13 +421,18 @@ const createBill = async() => {
     <header>
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#home"><Button variant="primary" onClick={ConnectWalletHandler}>Connect(Rinkeby testnet)</Button></Navbar.Brand>
+        <Navbar.Brand href="#home"><Button variant="primary" onClick={ConnectWalletHandler}>{connect_wallet_msg}</Button></Navbar.Brand>
         {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={ () => updateQuanstity('A', 10, 20)}>Increase quantity of A</Button></Navbar.Brand> */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {/* <Nav.Link href="/about">About</Nav.Link> */}
-        <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand>
+        {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
+        {address == null &&
+        
+          <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand>
+        
+      }
 
             {/* <NavDropdown title="Update your shop" id="basic-nav-dropdown">
               {items.map(item => (  
@@ -583,7 +587,7 @@ const createBill = async() => {
           © Pratham Chaurasia 2022
         </p>
         <p className="mb-0">
-          Connect with me <a href="/https://www.linkedin.com/in/pratham-chaurasia-94a786227/">LinkedIn</a> 
+          Connect with me <a href="https://www.linkedin.com/in/pratham-chaurasia-94a786227/" target = "_blank">LinkedIn</a> 
             
           
           .
