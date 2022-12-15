@@ -408,19 +408,15 @@ const createBill = async() => {
 
   return (
     <BrowserRouter>
-  <body>
-    <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} connect_wallet_msg = {connect_wallet_msg}/>
-    
-    <main>
-      <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
-      
-      
-
-
-    <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
-    </main>
-    <Footer/>
-  </body>
+      <body>
+        <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} connect_wallet_msg = {connect_wallet_msg}/>
+        
+        <main>
+          <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
+          <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
+        </main>
+        <Footer/>
+      </body>
     </BrowserRouter>
   );
 }

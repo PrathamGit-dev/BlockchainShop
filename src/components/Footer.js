@@ -11,10 +11,7 @@ export const Footer = (props) => {
           © Pratham Chaurasia 2022
         </p>
         <p className="mb-0">
-          Connect with me <a href="https://www.linkedin.com/in/pratham-chaurasia-94a786227/" target = "_blank">LinkedIn</a> 
-            
-          
-          .
+          Connect with me <a href="https://www.linkedin.com/in/pratham-chaurasia-94a786227/" target="_blank">LinkedIn</a>.
         </p>
       </div>
     </footer>

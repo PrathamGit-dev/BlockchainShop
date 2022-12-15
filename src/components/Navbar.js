@@ -18,12 +18,12 @@ export const NavBar = (props) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {/* <Nav.Link href="/about">About</Nav.Link> */}
-        {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
-        {props.address == null &&
-        
-          <Navbar.Brand href="#home"><Button variant="primary" onClick={props.AddCustomer}>Add as customer</Button></Navbar.Brand>
-        
-      }
+            {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
+            {props.address == null &&
+
+              <Navbar.Brand href="#home"><Button variant="primary" onClick={props.AddCustomer}>Add as customer</Button></Navbar.Brand>
+
+            }
 
             {/* <NavDropdown title="Update your shop" id="basic-nav-dropdown">
               {items.map(item => (  
