@@ -7,16 +7,17 @@ import 'bootstrap/dist/js/bootstrap.js';
 import $ from 'jquery';
 import Popper from 'popper.js';
 import Dropdown from 'react-bootstrap/Dropdown';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Button from 'react-bootstrap/Button';
+
 import { useState, useEffect} from 'react'
 import { ABI } from './components/abi';
 import Web3 from 'web3'
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
+import { NavBar } from './components/Navbar';
+import { ItemsSection } from "./components/ItemsSection"; 
+import { Dashboard } from './components/Dashboard';
+import { Footer } from './components/Footer';
 
 
 function App() {
@@ -407,193 +408,18 @@ const createBill = async() => {
 
   return (
     <BrowserRouter>
-    
-   <meta charSet="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="" />
-  <meta
-    name="author"
-    content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
-  />
-  <meta name="generator" content="Hugo 0.104.2" />
-  <title>Album example · Bootstrap v5.2</title>
   <body>
-    <header>
-    <Navbar bg="light" expand="lg">
-      <Container>
-        <Navbar.Brand href="#home"><Button variant="primary" onClick={ConnectWalletHandler}>{connect_wallet_msg}</Button></Navbar.Brand>
-        {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={ () => updateQuanstity('A', 10, 20)}>Increase quantity of A</Button></Navbar.Brand> */}
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {/* <Nav.Link href="/about">About</Nav.Link> */}
-        {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
-        {address == null &&
-        
-          <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand>
-        
-      }
-
-            {/* <NavDropdown title="Update your shop" id="basic-nav-dropdown">
-              {items.map(item => (  
-                <Dropdown.Item>{item[0]}  - {item[2]} no.s  - &#x20b9;{item[1]}/-<Button variant="primary" onClick={ () => updateQuantity(item[0], item[1], 10)}>Add 10 more</Button>
-                </Dropdown.Item>
-              ))}    
-              <Dropdown.Item>Add new Item<Button variant="primary" onClick={ () => AddNewItemHandler('E', 25, 50)}>Add {'E'}</Button>
-                </Dropdown.Item>
-            </NavDropdown> */}
-
-
-            <NavDropdown title="Your Details" id="basic-nav-dropdown">
-              {/* <NavDropdown.Item href="">{customer[0]}</NavDropdown.Item> */}
-              {/* <NavDropdown.Item href="">{customer[1]}</NavDropdown.Item> */}
-              <NavDropdown.Item href="#action/3.3">{address}</NavDropdown.Item>
-              {/* <NavDropdown.Divider /> */}
-              <NavDropdown.Item >
-                {/* <button className="btn btn-secondary my-2" onClick={updateQuantity("A",10,10)}>
-                Update A
-                </button> */}
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    </header>
+    <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} connect_wallet_msg = {connect_wallet_msg}/>
+    
     <main>
-      <section className="py-5 text-center container">
-        <div className="row py-lg-5">
-          <div className="col-lg-6 col-md-8 mx-auto">
-            <h1 className="fw-light">Blockchain Shop</h1>
-            <p className="lead text-muted">
-              
-              We are glad to have you back 
-              {/* <b>{customer['name']}</b> */}
-              !!!
-              
-             
-              
-            </p>
-            <p className="lead text-muted">
-              {/* ShopOwner is <b>{shopOwner}</b>!!! */}
-              <b>{msg_main}</b>
-              
-            </p>
-            <div>
-              <button className="btn btn-secondary my-2" onClick={createBill}>
-                Create Bill
-              </button>
-              <button className="btn btn-secondary my-2" onClick={FinaliseCart}>
-                Update Cart
-              </button>
-              
-              <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        View Cart &#x20b9;{cart_amount}/-
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu>
-      {cart_local.map(item => (  
-        <Dropdown.Item href="">{item[0]}  - {item[2]} no.s  - &#x20b9;{item[1] * item[2]}/-<button type="button" className="btn btn-sm btn-outline-secondary" onClick={ () => RemoveFromCartHandler(item[0])}>
-          Remove
-        </button></Dropdown.Item>
-     ))}  
-      </Dropdown.Menu>
-    </Dropdown>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
+      
       
 
 
-      <div className="album py-5 bg-light">
-        <div className="container">
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-6 g-3">
-          {
-          items.map(item => (  
-          <div>  
-              <div><div className="col">
-               <div className="card shadow-sm">
-                <svg
-                    className="bd-placeholder-img card-img-top"
-                    width={60}
-                    height={100}
-                    xmlns="http://www.w3.org/2000/svg"
-                    role="img"
-                    aria-label="Placeholder: Thumbnail"
-                    preserveAspectRatio="xMidYMid slice"
-                    focusable="false"
-                  >
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#55595c" />
-                    <text x="50%" y="50%" fill="#eceeef" dy=".3em">
-                      {item[0]}
-                      
-                    </text>
-                  </svg>
-                  <div className="card-body">
-                    <p className="card-text"> This is item {item[0]}</p>
-                    <p className="card-text">&#x20b9; {item[1]}/-</p>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div className="btn-group">
-                        {item[2] != 0 ? <button
-                          type="button"
-                          className="btn btn-sm btn-outline-secondary" 
-                          onClick={
-                            () => AddItemHandler(item[0], item[1])
-
-                          }
-                        >
-                          Add
-                        </button> : <button
-                          type="button"
-                          className="btn btn-sm btn-outline-secondary" 
-                        >
-                          Can't add
-                        </button>}
-                        {/* <button
-                          type="button"
-                          className="btn btn-sm btn-outline-secondary" 
-                          onClick={
-                            () => AddItemHandler(item[0], item[1])
-
-                          }
-                        >
-                          Add
-                        </button> */}
-                        
-                      </div>
-                      <small className="text-muted">{item[2]}</small>
-                    </div>
-                  </div>
-                </div>
-              </div></div>
-          </div>  
-        ))}  
-
-            
-                   
-          </div>
-        </div>
-      </div>
+    <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
     </main>
-    <footer className="text-muted py-5">
-      <div className="container">
-        <p className="float-end mb-1">
-          <a href="#">Back to top</a>
-        </p>
-        <p className="mb-1">
-          © Pratham Chaurasia 2022
-        </p>
-        <p className="mb-0">
-          Connect with me <a href="https://www.linkedin.com/in/pratham-chaurasia-94a786227/" target = "_blank">LinkedIn</a> 
-            
-          
-          .
-        </p>
-      </div>
-    </footer>
+    <Footer/>
   </body>
     </BrowserRouter>
   );
