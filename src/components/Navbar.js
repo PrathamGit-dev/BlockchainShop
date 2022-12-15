@@ -17,8 +17,11 @@ export const NavBar = (props) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {/* <Nav.Link href="/about">About</Nav.Link> */}
-            {/* <Navbar.Brand href="#home"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
+            <Nav.Link href="/about">About</Nav.Link>
+            <Nav.Link href="/transactions">Transactions</Nav.Link>
+            {props.address == props.shopOwner && 
+            <Nav.Link href="/AddItem">Add Item</Nav.Link>}
+            {/* <Navbar.Brand href="transactions"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
             {props.address == null &&
 
               <Navbar.Brand href="#home"><Button variant="primary" onClick={props.AddCustomer}>Add as customer</Button></Navbar.Brand>

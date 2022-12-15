@@ -18,7 +18,9 @@ import { NavBar } from './components/Navbar';
 import { ItemsSection } from "./components/ItemsSection"; 
 import { Dashboard } from './components/Dashboard';
 import { Footer } from './components/Footer';
-
+import { About } from './components/About';
+import { Transactions } from './components/Transactions';
+import { AddItem } from './components/AddItem';
 
 function App() {
 
@@ -85,29 +87,15 @@ const vmContractHandler = async () => {
       }
   }
 }
-  // ConnectWalletHandler();
-
-  //check for git
-
 
 const ConnectWalletHandler = async() => {
   console.log("Connect wallet fired")
   if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
       try {
-          // const accounts = await web3.eth.getAccounts();
-          // console.log("Accounts accessed")
-          // const account = accounts[0];
-          // setAddress(account)
-          // console.log("Address is ", address)
-          // setError('')
-          // setSuccessMsg("WalletConnected")
-          // CustomerHandler()
-          // console.log("Before provider")
+         
           const provider = await new ethers.providers.Web3Provider(window.ethereum);
           // console.log("Provider resolved")
-
           await provider.send("eth_requestAccounts", []);
-
           const signers = provider.getSigner();
           const address = await signers.getAddress();
           setAddress(address);
@@ -125,12 +113,6 @@ const ConnectWalletHandler = async() => {
           catch(err){
             console.log("Not a cusotme")
           }
-          // console.log(address)
-          // const accounts = await provider.send({ method: 'eth_requestAccounts' });
-          // const account = accounts[0];
-          // setAddress(account)
-          // console.log("Address is ", address)
-
       }
       catch (err) {
           setError("Unable to connect wallet")
@@ -207,17 +189,9 @@ const items_quantity = async() => {
 }
 
 const ItemsHandler = async() => {
-  // items_quantity()
   const element_local_array = []
-  // const length_items = await vmContract.methods.items_array().call();
-  // console.log("In items handler checking total items")
-  // console.log(total_items)
   for (let index = 0; index < total_items; index++) {
     const element = await vmContract.methods.view_Shop(index).call();
-
-//WRITE A CONDITION IF ELEMENT QUANTITY IS 0 DO NOT PUSH IT
-
-
     element_local_array.push(element);
   }
   setItems(element_local_array);
@@ -233,18 +207,13 @@ const CustomerHandler = async() => {
 const EtherCartHandler = async() => {
   // console.log("Entered ether cart handler")
   let cart_local_ = [];
-  // console.log("customer")
-  // console.log(customer)
   if(customer['cart']['0'].length != 0){
   for (let index = 0; index < customer['cart']['0'].length; index++) {
     cart_local_.push([customer['cart']['0'][index], customer['cart']['1'][index],  customer['cart']['2'][index] * 1]);  
   }
 }
-  // console.log("Ether cart")
-  // console.log(cart_local_);
   setCart_ether(cart_local_);
   CartAmountHandler()
-
 }
 
 
@@ -323,17 +292,13 @@ const RemoveFromCartHandler = (item_code) => {
 
 const AddItemHandler = (item_code, item_price) => {
   let local_cart_ = cart_local;
-  // console.log(local_cart_)
-
   if(cart_local.length == 0){
     console.log("Entered this")
     local_cart_.push([item_code, item_price, 1]);
     setCartLocal(local_cart_)
     LocalCartHandler();
-    // CartAmountHandler();
   }
   else{
-
   let found = false;
   for (let i = 0; i < local_cart_.length; i++) {
     if(local_cart_[i][0] == item_code){
@@ -409,11 +374,31 @@ const createBill = async() => {
   return (
     <BrowserRouter>
       <body>
-        <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} connect_wallet_msg = {connect_wallet_msg}/>
+        <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} shopOwner = {shopOwner} connect_wallet_msg = {connect_wallet_msg}/>
         
         <main>
-          <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
-          <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
+          <Routes>
+            <Route exact path="/" element={<>
+              <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
+              <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
+              </>}>
+            </Route>
+            <Route exact path="/about" element={<>
+                <About/>
+              </>}>
+            </Route>
+            <Route exact path="/transactions" element={<>
+                <Transactions vmContract = {vmContract} address = {address}/>
+              </>}>
+            </Route>
+            
+              
+            
+            <Route exact path="/AddItem" element={<>
+                <AddItem total_items = {total_items} items = {items} updateQuantity = {updateQuantity} AddNewItemHandler = {AddNewItemHandler}/>
+              </>}>
+            </Route>
+          </Routes>
         </main>
         <Footer/>
       </body>
