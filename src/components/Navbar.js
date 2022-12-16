@@ -12,8 +12,8 @@ export const NavBar = (props) => {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-
-        <Navbar.Brand href="#home"><Button variant="primary" onClick={props.ConnectWalletHandler}>{props.connect_wallet_msg}</Button></Navbar.Brand>
+      <Navbar.Brand><Nav.Link href="/">Home</Nav.Link></Navbar.Brand>
+        <Navbar.Brand><Button variant="primary" onClick={props.ConnectWalletHandler}>{props.connect_wallet_msg}</Button></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

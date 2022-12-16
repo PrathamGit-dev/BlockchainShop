@@ -75,7 +75,7 @@ const vmContractHandler = async () => {
           // console.log("Type of abi2 is", typeof(abi2))
           // const vm = await new web3.eth.Contract(abi2, "0x20ae8f53a89b20e2897fe15cb3503b722f57706c");
           
-          const vm = await new web3.eth.Contract(abi2, "0x4243B09895c6EA5Fc46Aa2bA5CF024f91bB5E9d4");
+          const vm = await new web3.eth.Contract(abi2, "0xc90F7729366fc9fb6AD240BE5D17B22c723eA796");
           // const vm = await new ethers.
           // const vm = await contract(web3);
           setVmContract(vm)
@@ -140,6 +140,7 @@ const ConnectWalletHandler = async() => {
 
 const ShopOwnerHandler = async() => {
   const shop_owner = await vmContract.methods.shopowner().call();
+  console.log(shop_owner);
   setShopOwner(shop_owner);
  
 }
@@ -388,7 +389,7 @@ const createBill = async() => {
               </>}>
             </Route>
             <Route exact path="/transactions" element={<>
-                <Transactions vmContract = {vmContract} address = {address}/>
+                <Transactions vmContract = {vmContract} address = {address} customer = {customer}/>
               </>}>
             </Route>
             
