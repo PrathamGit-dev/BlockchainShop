@@ -10,7 +10,7 @@ export const Dashboard = (props) => {
           <p className="lead text-muted">
 
             We are glad to have you back
-            {/* <b>{customer['name']}</b> */}
+            <b>{" ".concat(props.customer[0])}</b>
             !!!
 
 
@@ -21,10 +21,13 @@ export const Dashboard = (props) => {
             <b>{props.msg_main}</b>
 
           </p>
+          {props.customer[2] > 1 && 
           <div>
+            
             <button className="btn btn-secondary my-2" onClick={props.createBill}>
               Create Bill
             </button>
+            
             <button className="btn btn-secondary my-2" onClick={props.FinaliseCart}>
               Update Cart
             </button>
@@ -45,6 +48,14 @@ export const Dashboard = (props) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+        }
+        {props.customer[2] == 0 && 
+        <a href = "/addCustomer">
+           <button className="btn btn-primary my-2" >
+          Add as customer
+        </button>
+        </a>
+        }
         </div>
       </div>
     </section>

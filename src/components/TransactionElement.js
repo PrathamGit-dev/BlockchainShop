@@ -31,7 +31,7 @@ export const TransactionElement = (props) => {
 
   return (
      
-    <div class="accordion accordion-flush text-center container" id="accordionFlushExample">
+    <div class="accordion accordion-flush text-center container my-5" id="accordionFlushExample">
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingOne">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
@@ -47,7 +47,7 @@ export const TransactionElement = (props) => {
                 <tr>
                     <th>Item</th>
                     <th>Price</th>
-                    <th>Qunatity</th>
+                    <th>Quantity</th>
                 </tr>
                 {
                     item_code.map((item, i)=> (
