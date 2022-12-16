@@ -8,7 +8,7 @@ export const About = () => {
             The project is under deployment with features being continuously updated. You can give your feedback on the following github repository.
     <a href="https://github.com/PrathamGit-dev/BlockchainShop" target="_blank">Click here for GITHUB repository</a>.
         </p>
-    </p>
+    
     
     </div>
   )
