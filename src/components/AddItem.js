@@ -35,6 +35,8 @@ export const AddItem = (props) => {
 
     return (
         <>
+        {props.isShopOwner && 
+            <div>
             <link href="form-validation.css" rel="stylesheet" />
             <div className="container">
                 <main>
@@ -68,7 +70,7 @@ export const AddItem = (props) => {
 
 
                         <div className="col-md-7 col-lg-8">
-                            <h4 className="mb-3">Billing address</h4>
+                            <h4 className="mb-3">Item details</h4>
                             <form onSubmit={submit} className="needs-validation" noValidate="">
                                 <div className="row g-3">
                                     <div className="sm-6">
@@ -122,8 +124,8 @@ export const AddItem = (props) => {
                                     </div>
                                 <hr className="my-4" />
 
-                                <button type="submit" className="btn btn-success text-center">
-                                    Continue to checkout
+                                <button type="submit" className=" container btn btn-success text-center">
+                                    Add the Item
                                 </button>
                                 </div>
                             </form>
@@ -133,7 +135,15 @@ export const AddItem = (props) => {
 
                
             </div>
+            </div>
+            }
 
+            {!props.isShopOwner && 
+                <div className='container text-center my-5'>
+                    <h3><b style={{ color: "red" }}>You are not the shopkeeper &#9888;</b></h3>
+
+                </div>
+            }
 
         </>
     )

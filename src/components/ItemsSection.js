@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ItemsSection = (props) => {
   return (
-    <div className="album py-5 bg-light">
+    <div className="album py-5 bg-light container align-items-center">
       <div className="container">
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-6 g-3">
           {

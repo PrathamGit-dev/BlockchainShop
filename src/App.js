@@ -9,7 +9,6 @@ import Popper from 'popper.js';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import { useState, useEffect} from 'react'
-import { ABI } from './components/abi';
 import Web3 from 'web3'
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -21,9 +20,15 @@ import { Footer } from './components/Footer';
 import { About } from './components/About';
 import { Transactions } from './components/Transactions';
 import { AddItem } from './components/AddItem';
+import { AddCustomeR } from './components/AddCustomer';
+import { Help } from "./components/Help"
+import BlockMarket from "./smart_contract/build/contracts/BlockMarket.json";
+
+
 
 function App() {
 
+  const contractAddress = "0xc90F7729366fc9fb6AD240BE5D17B22c723eA796";
   const [error, setError]  = useState('')
   const [vmContract, setVmContract] = useState(null)
   const [web3, setWeb3] = useState(null)
@@ -39,7 +44,7 @@ function App() {
   const [item_update, setItem_update] = useState([])
   const [msg_main, setMsg_main] = useState("Connect your wallet")
   const [connect_wallet_msg, set_connect_wallet_msg] = useState("Connect")
-
+  
   useEffect(() => {
     if (vmContract){
         // winnerHandler()
@@ -68,19 +73,11 @@ const vmContractHandler = async () => {
       try {
         const _web3 = await new Web3(window.ethereum);
         setWeb3(_web3)
-        // const _provider = new ethers.providers.Web3Provider(window.Ethereum);
-        // setProvider(_provider)
           console.log("Web3 set")
-          const abi2 = ABI;
-          // console.log("Type of abi2 is", typeof(abi2))
-          // const vm = await new web3.eth.Contract(abi2, "0x20ae8f53a89b20e2897fe15cb3503b722f57706c");
+          const abi = BlockMarket.abi;
           
-          const vm = await new web3.eth.Contract(abi2, "0xc90F7729366fc9fb6AD240BE5D17B22c723eA796");
-          // const vm = await new ethers.
-          // const vm = await contract(web3);
+          const vm = await new web3.eth.Contract(abi, contractAddress);
           setVmContract(vm)
-          // console.log("Vm Contract set")
-          // console.log(vmContract)
       }
       catch (err) {
           setError(err.message)
@@ -94,14 +91,12 @@ const ConnectWalletHandler = async() => {
       try {
          
           const provider = await new ethers.providers.Web3Provider(window.ethereum);
-          // console.log("Provider resolved")
           await provider.send("eth_requestAccounts", []);
           const signers = provider.getSigner();
           const address = await signers.getAddress();
           setAddress(address);
           try{
             const a= await vmContract.methods.customers(address).call();
-            // console.log(a[0])
             if(a[0] == '') {
               setMsg_main("Add yourself as customer")
             }
@@ -119,48 +114,27 @@ const ConnectWalletHandler = async() => {
           console.log(err)
       }
 }
-
-// const ConnectWalletHandler = async() => {
-  // console.log("Connect wallet fired")
-  // if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
-      // try {
-      //     const accounts = await web3.ethereum.request({ method: 'eth_requestAccounts' });
-      //     // console.log("Accounts accessed")
-      //     const account = accounts[0];
-      //     setAddress(account)
-      //     console.log("Address is ", address)
-      //     setError('')
-      //     // setSuccessMsg(WalletConnected)
-      // }
-      // catch (err) {
-      //     setError("Unable to connect wallet")
-      // }
 }
 
 
 const ShopOwnerHandler = async() => {
   const shop_owner = await vmContract.methods.shopowner().call();
-  console.log(shop_owner);
   setShopOwner(shop_owner);
  
 }
 
-const AddCustomer = async() => {
-  const added_customer = await vmContract.methods.addCustomer().send({from: address});
+const AddCustomer = async(name_, phone_) => {
+  const added_customer = await vmContract.methods.addCustomer(name_, phone_).send({from: address});
   console.log("Added customer")
 }
 
 const AddNewItemHandler = async(item_code_, item_price_, item_quantity_) => {
-  // const transact = await vmContract.methods.addnewItem(item_code_, item_price_, item_quantity_);
   try{
     await vmContract.methods.addnewItem(item_code_, item_price_, item_quantity_).send({
         from: address
-        // ,
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
-    // setPurchases(purchases++);
     setSuccessMsg(`Congratulations, Item added Successfully`)
-    // getValueHandler()
     }
     catch(err){
         setError(err.message)
@@ -174,9 +148,7 @@ const updateQuantity = async(item_code_, item_price_, item_quantity_) => {
         // ,
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
-    // setPurchases(purchases++);
     setSuccessMsg(`Congratulations, Item updated Successfully`)
-    // getValueHandler()
     }
     catch(err){
         setError(err.message)
@@ -185,7 +157,6 @@ const updateQuantity = async(item_code_, item_price_, item_quantity_) => {
 
 const items_quantity = async() => {
   const total = await vmContract.methods.itemNos().call();
-  // console.log("total items are")
   setTotalItems(total)
 }
 
@@ -201,12 +172,10 @@ const ItemsHandler = async() => {
 const CustomerHandler = async() => {
   const customer = await vmContract.methods.customers(address).call();
   setCustomer(customer)
-  // setCart(customer['cart'])
   EtherCartHandler()
 }
 
 const EtherCartHandler = async() => {
-  // console.log("Entered ether cart handler")
   let cart_local_ = [];
   if(customer['cart']['0'].length != 0){
   for (let index = 0; index < customer['cart']['0'].length; index++) {
@@ -269,25 +238,21 @@ const RemoveFromCartHandler = (item_code) => {
   for (let i = 0; i < local_cart_.length; i++) {
     if(local_cart_[i][0] == item_code){
       local_cart_[i][2] = local_cart_[i][2] * 1 - 1;  //convert to int multiply by 1
-      // break;
       local_cart_amount = local_cart_amount - local_cart_[i][2];
     }
-      console.log("in remove")
       console.log(local_cart_updated)
       if(local_cart_[i][2] != 0){
         local_cart_updated.push([local_cart_[i][0], local_cart_[i][1], local_cart_[i][2]]);
       }
     
   }
-  console.log("Local cart updated")
-  console.log(local_cart_updated)
+  // console.log("Local cart updated")
+  // console.log(local_cart_updated)
   setCartLocal(local_cart_updated)
-  console.log("local cart set")
-  console.log(cart_local);
-  console.log("entering cart amount handler")
+  // console.log("local cart set")
+  // console.log(cart_local);
+  // console.log("entering cart amount handler")
   setCartAmount(local_cart_amount)
-
-
 }
 
 
@@ -304,14 +269,14 @@ const AddItemHandler = (item_code, item_price) => {
   for (let i = 0; i < local_cart_.length; i++) {
     if(local_cart_[i][0] == item_code){
       local_cart_[i][2] = local_cart_[i][2] * 1 + 1;  //convert to int multiply by 1
-      // break;
+      
       found = true;
     }
   }
   if(!found)
   local_cart_.push([item_code, item_price, 1]);
   setCartLocal(local_cart_)
-  console.log(cart_local);
+  // console.log(cart_local);
   CartAmountHandler()
 }
 }
@@ -348,55 +313,51 @@ const FinaliseCart = async() => {
 }
 
 const createBill = async() => {
-
-//CART should not be empty
-
   try{
     await vmContract.methods.billing().send({
         from: address
         // ,
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
-    // setPurchases(purchases++);
     setSuccessMsg(`Congratulations, Billed Successfully`)
-    // getValueHandler()
     }
     catch(err){
         setError(err.message)
     }
-    // console.log("Calling ethercarthandler");
     window.location.reload(false);
-    // CustomerHandler();
-
-
 }
 
 
   return (
     <BrowserRouter>
       <body>
-        <NavBar ConnectWalletHandler = {ConnectWalletHandler} AddCustomer = {AddCustomer} address = {address} shopOwner = {shopOwner} connect_wallet_msg = {connect_wallet_msg}/>
+        <NavBar ConnectWalletHandler = {ConnectWalletHandler} customer = {customer} address = {address} shopOwner = {shopOwner} connect_wallet_msg = {connect_wallet_msg}/>
         
         <main>
           <Routes>
             <Route exact path="/" element={<>
-              <Dashboard msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
+              <Dashboard customer = {customer} address = {address} msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
               <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
               </>}>
             </Route>
             <Route exact path="/about" element={<>
-                <About/>
+                <About contractAddress = {contractAddress}/>
               </>}>
             </Route>
             <Route exact path="/transactions" element={<>
                 <Transactions vmContract = {vmContract} address = {address} customer = {customer}/>
               </>}>
             </Route>
-            
-              
-            
+            <Route exact path="/addCustomer" element={<>
+                <AddCustomeR AddCustomer = {AddCustomer} customer = {customer}/>
+              </>}>
+            </Route>
+            <Route exact path="/help" element={<>
+                <Help/>
+              </>}>
+            </Route>
             <Route exact path="/AddItem" element={<>
-                <AddItem total_items = {total_items} items = {items} updateQuantity = {updateQuantity} AddNewItemHandler = {AddNewItemHandler}/>
+                <AddItem isShopOwner = {address == shopOwner} total_items = {total_items} items = {items} updateQuantity = {updateQuantity} AddNewItemHandler = {AddNewItemHandler}/>
               </>}>
             </Route>
           </Routes>

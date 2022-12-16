@@ -9,45 +9,30 @@ import { NavDropdown } from 'react-bootstrap';
 
 
 export const NavBar = (props) => {
+  const customer = props.customer;
+  const visit_count = customer[2];
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-      <Navbar.Brand><Nav.Link href="/">Home</Nav.Link></Navbar.Brand>
-        <Navbar.Brand><Button variant="primary" onClick={props.ConnectWalletHandler}>{props.connect_wallet_msg}</Button></Navbar.Brand>
+        {props.address == undefined &&
+          <Navbar.Brand><Button variant="primary" onClick={props.ConnectWalletHandler}>{props.connect_wallet_msg}</Button></Navbar.Brand>}
+          <Navbar.Brand><Nav.Link href="/">Home</Nav.Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/about">About</Nav.Link>
+            {props.customer[2] != 0 && 
             <Nav.Link href="/transactions">Transactions</Nav.Link>
-            {props.address == props.shopOwner && 
-            <Nav.Link href="/AddItem">Add Item</Nav.Link>}
-            {/* <Navbar.Brand href="transactions"><Button variant="primary" onClick={AddCustomer}>Add as customer</Button></Navbar.Brand> */}
-            {props.address == null &&
-
-              <Navbar.Brand href="#home"><Button variant="primary" onClick={props.AddCustomer}>Add as customer</Button></Navbar.Brand>
-
             }
-
-            {/* <NavDropdown title="Update your shop" id="basic-nav-dropdown">
-              {items.map(item => (  
-                <Dropdown.Item>{item[0]}  - {item[2]} no.s  - &#x20b9;{item[1]}/-<Button variant="primary" onClick={ () => updateQuantity(item[0], item[1], 10)}>Add 10 more</Button>
-                </Dropdown.Item>
-              ))}    
-              <Dropdown.Item>Add new Item<Button variant="primary" onClick={ () => AddNewItemHandler('E', 25, 50)}>Add {'E'}</Button>
-                </Dropdown.Item>
-            </NavDropdown> */}
+            {props.address == props.shopOwner &&
+              <Nav.Link href="/AddItem">Add Item</Nav.Link>}
+            <Nav.Link href="/help">Help</Nav.Link>
 
 
             <NavDropdown title="Your Details" id="basic-nav-dropdown">
-              {/* <NavDropdown.Item href="">{customer[0]}</NavDropdown.Item> */}
-              {/* <NavDropdown.Item href="">{customer[1]}</NavDropdown.Item> */}
-              <NavDropdown.Item href="#action/3.3">{props.address}</NavDropdown.Item>
-              {/* <NavDropdown.Divider /> */}
-              <NavDropdown.Item >
-                {/* <button className="btn btn-secondary my-2" onClick={updateQuantity("A",10,10)}>
-                Update A
-                </button> */}
-              </NavDropdown.Item>
+              <NavDropdown.Item>{customer[0]}</NavDropdown.Item>
+              <NavDropdown.Item>{customer[1]}</NavDropdown.Item>
+              <NavDropdown.Item>{props.address}</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

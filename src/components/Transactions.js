@@ -14,6 +14,7 @@ export const Transactions = (props) => {
   const [itemcount, setItemCount] = useState([]);
   const [total_amount, setTotalAmount] = useState([]);
   const [timeStamp, setTimeStamp] = useState([]);
+  const [loading, setLoading] = useState(true);
   // const [blankarr, = [];
 
   const vmContract = props.vmContract;
@@ -67,12 +68,14 @@ export const Transactions = (props) => {
     setItemCount(itemcount_);
     setTotalAmount(totalAmount_);
     setTimeStamp(timeStamp_);
+    setLoading(false)
 
     console.log(itemcode);
     console.log(itemquant);
     console.log(itemprice);
     console.log(timeStamp);
     // console.log("blank arr", blankarr)
+
   }
 
 
@@ -88,10 +91,23 @@ export const Transactions = (props) => {
 
   return (
     <>
-    <div class = "container">Check later</div>
+    {loading && visit_count > 1 &&
+    <div class = "container text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Loading transactions...</p>
+    </div>
+    }
+    {!loading && <>
     {itemcode.map((item,i) => (
       <TransactionElement itemcode = {item} itemprice = {itemprice[i]} itemquantity = {itemquant[i]} timestamp = {timeStamp[i]} total_amount = {total_amount[i]}/>
     ))}
+    </>
+}
+
+    {visit_count == 1 && <div className='container text-center my-5'>No transactions done. <a href="/">Continue to Shop</a></div>}
+    {visit_count == 0 && <div className='container text-center my-5'>Not registered as customer. <a href="/addCustomer">Add as customer</a></div>}
     
     {/* {blankarr.map(function(elem, i){
         console.log("From return")
