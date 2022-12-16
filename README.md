@@ -81,4 +81,4 @@ make the length of items changeable
 ______
 add new item textbox
 ______
-Customer history display
+Get the Customer history and display under previous transaction 
