@@ -21,6 +21,7 @@ export const Transactions = (props) => {
   const address = props.address;
   const customer = props.customer;
   let visit_count  = customer[2];
+  console.log("Visit count",visit_count)
 
 
   
@@ -28,7 +29,7 @@ export const Transactions = (props) => {
 
   const dataHandler = async() => {
     console.log("In data handler")
-    visit_count  = customer[2] - 1;
+    const visit_count_loop  = customer[2] - 1;
     const itemcode_ = [];
     const itemquant_ = [];
     const itemprice_ = [];
@@ -36,7 +37,7 @@ export const Transactions = (props) => {
     let totalAmount_ = [];
     const timeStamp_ = [];
 
-    for (let index = 0; index < visit_count; index++) {
+    for (let index = 0; index < visit_count_loop; index++) {
       const itemcount = await vmContract.methods.customer_bill_itemcount(address, index).call();
       itemcount_.push(itemcount);
       const time = await vmContract.methods.customer_bill_timestamp(address, index).call();
@@ -91,6 +92,8 @@ export const Transactions = (props) => {
 
   return (
     <>
+    {visit_count == 1 && <div className='container text-center my-5'>No transactions done. <a href="/">Continue to Shop</a></div>}
+    {visit_count == 0 && <div className='container text-center my-5'>Not registered as customer. <a href="/addCustomer">Add as customer</a></div>}
     {loading && visit_count > 1 &&
     <div class = "container text-center my-5">
       <div class="spinner-border text-primary" role="status">
@@ -99,16 +102,14 @@ export const Transactions = (props) => {
     <p>Loading transactions...</p>
     </div>
     }
-    {!loading && <>
+    {!loading &&  visit_count > 1 && <>
     {itemcode.map((item,i) => (
       <TransactionElement itemcode = {item} itemprice = {itemprice[i]} itemquantity = {itemquant[i]} timestamp = {timeStamp[i]} total_amount = {total_amount[i]}/>
     ))}
     </>
 }
 
-    {visit_count == 1 && <div className='container text-center my-5'>No transactions done. <a href="/">Continue to Shop</a></div>}
-    {visit_count == 0 && <div className='container text-center my-5'>Not registered as customer. <a href="/addCustomer">Add as customer</a></div>}
-    
+       
     {/* {blankarr.map(function(elem, i){
         console.log("From return")
         return <TransactionElement itemcode={itemcode[i]} itemprice = {itemprice[i]} />;

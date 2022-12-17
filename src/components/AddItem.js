@@ -35,7 +35,16 @@ export const AddItem = (props) => {
 
     return (
         <>
-        {props.isShopOwner && 
+        {props.shopowner == null && 
+      <>
+      <div class = "container text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p><h6>Fetching contract details...Make sure to have </h6><h6 style={{ color: " #8B4000" }}>Metamask </h6><h6>extension installed</h6></p>
+    </div>
+  </>}
+        {props.isShopOwner && props.shopowner != null &&
             <div>
             <link href="form-validation.css" rel="stylesheet" />
             <div className="container">

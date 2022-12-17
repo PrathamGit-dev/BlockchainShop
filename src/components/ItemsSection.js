@@ -8,6 +8,7 @@ export const ItemsSection = (props) => {
           {
             props.items.map(item => (
               <div>
+                {item[2] > 0 && 
                 <div><div className="col">
                   <div className="card shadow-sm">
                     <svg
@@ -53,8 +54,11 @@ export const ItemsSection = (props) => {
                     </div>
                   </div>
                 </div></div>
+              }
               </div>
-            ))}
+            )
+            )
+            }
 
 
 

@@ -78,9 +78,12 @@ const vmContractHandler = async () => {
           
           const vm = await new web3.eth.Contract(abi, contractAddress);
           setVmContract(vm)
+          // setEMsg("Contract fetched")
       }
       catch (err) {
-          setError(err.message)
+
+          // setError("Awaiting contract...")
+          setSuccessMsg("")
       }
   }
 }
@@ -94,6 +97,8 @@ const ConnectWalletHandler = async() => {
           await provider.send("eth_requestAccounts", []);
           const signers = provider.getSigner();
           const address = await signers.getAddress();
+          setSuccessMsg("Wallet connected")
+          setError("")
           setAddress(address);
           try{
             const a= await vmContract.methods.customers(address).call();
@@ -106,11 +111,12 @@ const ConnectWalletHandler = async() => {
             }
           }
           catch(err){
-            console.log("Not a cusotme")
+            console.log("Not a cusotmer")
           }
       }
       catch (err) {
           setError("Unable to connect wallet")
+          setSuccessMsg("")
           console.log(err)
       }
 }
@@ -120,12 +126,23 @@ const ConnectWalletHandler = async() => {
 const ShopOwnerHandler = async() => {
   const shop_owner = await vmContract.methods.shopowner().call();
   setShopOwner(shop_owner);
+  // console.log(shopOwner)
  
 }
 
 const AddCustomer = async(name_, phone_) => {
-  const added_customer = await vmContract.methods.addCustomer(name_, phone_).send({from: address});
-  console.log("Added customer")
+  try{
+    await vmContract.methods.addCustomer(name_, phone_).send({from: address});
+    // console.log("Added customer")
+    setSuccessMsg("Customer added successfully. Start shopping")
+    setError("")
+  }
+  catch(err){
+      setError(err.message)
+      setSuccessMsg("")
+
+  }
+  
 }
 
 const AddNewItemHandler = async(item_code_, item_price_, item_quantity_) => {
@@ -135,9 +152,11 @@ const AddNewItemHandler = async(item_code_, item_price_, item_quantity_) => {
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
     setSuccessMsg(`Congratulations, Item added Successfully`)
+    setError("")
     }
     catch(err){
         setError(err.message)
+        setSuccessMsg("")
     }
 }
 
@@ -149,9 +168,11 @@ const updateQuantity = async(item_code_, item_price_, item_quantity_) => {
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
     setSuccessMsg(`Congratulations, Item updated Successfully`)
+    setError("")
     }
     catch(err){
         setError(err.message)
+        setSuccessMsg("")
     }
 }
 
@@ -185,8 +206,6 @@ const EtherCartHandler = async() => {
   setCart_ether(cart_local_);
   CartAmountHandler()
 }
-
-
 
 const CartAmountHandler = () => {
   // console.log("Entered cart amount handler")
@@ -253,13 +272,18 @@ const RemoveFromCartHandler = (item_code) => {
   // console.log(cart_local);
   // console.log("entering cart amount handler")
   setCartAmount(local_cart_amount)
+  setSuccessMsg("Removed ".concat(item_code).concat(". Consider updating the cart"))
+  if(local_cart_updated.length == 0) setSuccessMsg("Cart restored as bill can't be empty.")
+  setError("")
 }
 
 
 const AddItemHandler = (item_code, item_price) => {
   let local_cart_ = cart_local;
+  setSuccessMsg(item_code.concat(" added successfully. Consider updating the cart."))
+  setError("")
   if(cart_local.length == 0){
-    console.log("Entered this")
+    // console.log("Entered this")
     local_cart_.push([item_code, item_price, 1]);
     setCartLocal(local_cart_)
     LocalCartHandler();
@@ -276,6 +300,7 @@ const AddItemHandler = (item_code, item_price) => {
   if(!found)
   local_cart_.push([item_code, item_price, 1]);
   setCartLocal(local_cart_)
+  
   // console.log(cart_local);
   CartAmountHandler()
 }
@@ -292,10 +317,6 @@ const FinaliseCart = async() => {
     items_.push(cart_local[index][0]);
     quantity_.push(cart_local[index][2]);
   }
-  // console.log(items_)
-  // console.log(quantity_)
-
-  //FUNCTION TO CHECK IF CART HAS BEEN MODIFIED OR NOT
 
   try{
     await vmContract.methods.updateCart(items_, quantity_).send({
@@ -304,11 +325,13 @@ const FinaliseCart = async() => {
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
     // setPurchases(purchases++);
-    setSuccessMsg(`Congratulations, Cart Updated Successfully`)
+    setSuccessMsg(`Congratulations, Cart Updated Successfully. Start billing.`)
+    setError("")
     // getValueHandler()
     }
     catch(err){
         setError(err.message)
+        setSuccessMsg("")
     }
 }
 
@@ -320,9 +343,11 @@ const createBill = async() => {
         // value: web3.utils.toWei('0.001', "ether") * buyCount
     })
     setSuccessMsg(`Congratulations, Billed Successfully`)
+    setError("")
     }
     catch(err){
         setError(err.message)
+        setSuccessMsg("")
     }
     window.location.reload(false);
 }
@@ -331,25 +356,43 @@ const createBill = async() => {
   return (
     <BrowserRouter>
       <body>
-        <NavBar ConnectWalletHandler = {ConnectWalletHandler} customer = {customer} address = {address} shopOwner = {shopOwner} connect_wallet_msg = {connect_wallet_msg}/>
-        
-        <main>
+      <NavBar ConnectWalletHandler = {ConnectWalletHandler} customer = {customer} address = {address} shopOwner = {shopOwner} connect_wallet_msg = {connect_wallet_msg}/>
+
+
+      {successMsg != "" && successMsg != "Wallet connected" && 
+        <div class="alert alert-success container" role="alert">
+          {successMsg}
+        </div>
+      }
+      {error != "" && 
+        <div class="alert alert-danger container" role="alert">
+          {error}
+        </div>
+      }
+                {/* {shopOwner == null && <div class = "container text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p><h6>Fetching contract details...Make sure to have </h6><h6 style={{ color: " #8B4000" }}>Metamask </h6><h6>extension installed</h6></p>
+    </div>} */}
+
+       <main>
           <Routes>
             <Route exact path="/" element={<>
-              <Dashboard customer = {customer} address = {address} msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
+              <Dashboard shopowner = {shopOwner} customer = {customer} address = {address} msg_main = {msg_main} createBill = {createBill} FinaliseCart = {FinaliseCart} cart_amount = {cart_amount} cart_local = {cart_local} RemoveFromCartHandler = {RemoveFromCartHandler}/>
               <ItemsSection items = {items} AddItemHandler = {AddItemHandler} />
               </>}>
             </Route>
             <Route exact path="/about" element={<>
-                <About contractAddress = {contractAddress}/>
+                <About shopowner = {shopOwner} contractAddress = {contractAddress}/>
               </>}>
             </Route>
             <Route exact path="/transactions" element={<>
-                <Transactions vmContract = {vmContract} address = {address} customer = {customer}/>
+                <Transactions shopowner = {shopOwner} vmContract = {vmContract} address = {address} customer = {customer}/>
               </>}>
             </Route>
             <Route exact path="/addCustomer" element={<>
-                <AddCustomeR AddCustomer = {AddCustomer} customer = {customer}/>
+                <AddCustomeR shopowner = {shopOwner} AddCustomer = {AddCustomer} customer = {customer}/>
               </>}>
             </Route>
             <Route exact path="/help" element={<>
@@ -357,11 +400,13 @@ const createBill = async() => {
               </>}>
             </Route>
             <Route exact path="/AddItem" element={<>
-                <AddItem isShopOwner = {address == shopOwner} total_items = {total_items} items = {items} updateQuantity = {updateQuantity} AddNewItemHandler = {AddNewItemHandler}/>
+                <AddItem shopowner = {shopOwner} isShopOwner = {address == shopOwner} total_items = {total_items} items = {items} updateQuantity = {updateQuantity} AddNewItemHandler = {AddNewItemHandler}/>
               </>}>
             </Route>
           </Routes>
         </main>
+  
+    
         <Footer/>
       </body>
     </BrowserRouter>

@@ -2,7 +2,23 @@ import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 
 export const Dashboard = (props) => {
+  const shopowner = props.shopowner;
+  console.log("Shopowner is ", shopowner)
   return (
+    <>  
+    {shopowner == null && 
+      <>
+      <div class = "container text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p><h6>Fetching contract details...Make sure to have </h6><h6 style={{ color: " #8B4000" }}>Metamask </h6><h6>extension installed</h6></p>
+    </div>
+  </>}
+
+  {shopowner != null && 
+    
+
     <section className="py-5 text-center container">
       <div className="row py-lg-5">
         <div className="col-lg-6 col-md-8 mx-auto">
@@ -21,7 +37,7 @@ export const Dashboard = (props) => {
             <b>{props.msg_main}</b>
 
           </p>
-          {props.customer[2] > 1 && 
+          {props.customer[2] >= 1 && 
           <div>
             
             <button className="btn btn-secondary my-2" onClick={props.createBill}>
@@ -58,7 +74,8 @@ export const Dashboard = (props) => {
         }
         </div>
       </div>
-    </section>
+    </section>}
+    </>
   )
 }
 

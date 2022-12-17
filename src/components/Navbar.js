@@ -21,10 +21,10 @@ export const NavBar = (props) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/about">About</Nav.Link>
-            {props.customer[2] != 0 && 
+            {props.customer[2] > 0 && 
             <Nav.Link href="/transactions">Transactions</Nav.Link>
             }
-            {props.address == props.shopOwner &&
+            {props.address == props.shopOwner && props.shopOwner != null && 
               <Nav.Link href="/AddItem">Add Item</Nav.Link>}
             <Nav.Link href="/help">Help</Nav.Link>
 
