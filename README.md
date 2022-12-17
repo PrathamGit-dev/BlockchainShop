@@ -1,4 +1,4 @@
-Checkout the front end view on https://vercel.com/prathamgit-dev/blockchain-shop
+Checkout the front end view on https://blockchain-shop.vercel.app/
 
 ____________________________________________________________________________________
 CODING GUIDE
@@ -12,7 +12,8 @@ change the address
 make the length of items changeable
 add new item textbox
 Get the Customer history and display under previous transaction 
+Add customer page to accept name and phone number
 ______________________
 To do=>
-Add customer page to accept name and phone number
+Update help page for a complete guide
 
