@@ -54,11 +54,12 @@ function App() {
        
           ShopOwnerHandler()
           
-    if(address) {
+    if(address != null) {
       CustomerHandler()
     }
     else{
-      ConnectWalletHandler()
+      setTimeout(ConnectWalletHandler, 3000);
+      // ConnectWalletHandler()
     }
         
     }
@@ -79,6 +80,7 @@ const vmContractHandler = async () => {
           const vm = await new web3.eth.Contract(abi, contractAddress);
           setVmContract(vm)
           // setEMsg("Contract fetched")
+          
       }
       catch (err) {
 
