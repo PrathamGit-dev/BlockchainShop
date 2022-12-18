@@ -58,7 +58,7 @@ function App() {
       CustomerHandler()
     }
     else{
-      setTimeout(ConnectWalletHandler, 3000);
+      setTimeout(ConnectWalletHandler,500);
       // ConnectWalletHandler()
     }
         
